@@ -60,5 +60,42 @@ cat << 'EOF' > "$CONFIG_PATH"
 }
 EOF
 
+# ======================================================================================
+# Adjusting attendance settings
+# ======================================================================================
+echo "..................................."
+read -p "Do you want to update the default attendance ? (y/N): " UPDATE_CHOICE
 
+# Evaluate preference safely using  expressions
+if [[ "$UPDATE_CHOICE" =~ ^[Yy]$ ]]; then
+	read -p "Enter Warning Threshold (Default 75): " WARN_VAL
+	read -p "Enter Failure Threshold (Default 50): " FAIL_VAL
+
+	# if nothing is typed stick  with the original 75% and 50% default
+	WARN_VAL=${WARN_VAL:-75}
+	FAIL_VAL=${FAIL_VAL:-50}
+
+	echo "[*] Modifying configuration on_the_fly via sed.."
+	sed -i "s/'warning': *[0-9]*/'warning': $WARN_VAL/g" "$CONFIG_PATH" 2>/dev/null || sed -i 's/"warning": *[0-9]*/"warning": '$WARN_VAL'/g' "$CONFIG_PATH"
+	sed -i "s/'failure': *[0-9]*/'failure': $FAIL_VAL/g" "$CONFIG_PATH" 2>/dev/null || sed -i 's/"failure": *[0-9]*/"failure": '$FAIL_VAL'/g' "$CONFIG_PATH"
+	echo "[+] configuration values updated successfully!"
+
+fi
+
+
+
+# ==================================================================================
+# System Integrity & Health check
+# ==================================================================================
+echo "......................................"
+echo "[*] Launching system architecture Health check"
+
+HEALTH_STATUS="PASSED"
+
+if [ -d "attendance_tracker_${INPUT_SUFFIX}/Helpers" ] && [ -d "attendance_tracker_${INPUT_SUFFIX}/reports" ]; then
+	echo "[+] Structural check: Required workspace folder verified"
+else
+	echo "[-] Structural Check FAILED: workspace folder missing or broken."
+	HEALTH_STATUS="FAILED"
+fi
 
