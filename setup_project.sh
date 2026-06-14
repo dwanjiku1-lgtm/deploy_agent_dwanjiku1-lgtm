@@ -107,4 +107,15 @@ if [ -f "$CONFIG_PATH" ]; then
 	else
 		echo "config.json file  exist but the content is corrupt"
 		HEALTH_STATUS="FAILED"
-	fi	
+	fi
+
+# final deployment verdict evaluation
+echo "----------------------------------------"
+if [ "$HEALTH_STATUS" == "PASSED" ]; then
+	echo "=== SYSTEM HEALTH STATUS: [ PASSED ] =="
+	echo "[+] Deployment environment is 100% healthy and operational"
+else
+	echo "=== SYSTEM HEALTH STATUS: [ CRITICAL FAILURE ] ==="
+	echo "[-] Environment build failed. please evaluate the script errors."
+	exit 1
+fi	
