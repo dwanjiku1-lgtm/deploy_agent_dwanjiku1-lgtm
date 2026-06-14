@@ -99,3 +99,12 @@ else
 	HEALTH_STATUS="FAILED"
 fi
 
+# file verification scan
+if [ -f "$CONFIG_PATH" ]; then
+	# confirmation of vital configuration parameter if they exist
+	if grep -q '"thresholds"' "$CONFIG_PATH" && grep -q '"run_mode"' "$CONFIG_PATH"; then
+		echo "config.json is set  and verified"
+	else
+		echo "config.json file  exist but the content is corrupt"
+		HEALTH_STATUS="FAILED"
+	fi	
