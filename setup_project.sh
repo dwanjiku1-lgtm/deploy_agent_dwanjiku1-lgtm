@@ -41,7 +41,7 @@ mkdir -p "attendance_tracker_${INPUT_SUFFIX}/Helpers"
 mkdir -p "attendance_tracker_${INPUT_SUFFIX}/reports"
 #creating  empty files inside the subdirectories
 touch "attendance_tracker_${INPUT_SUFFIX}/attendance_checker.py"
-touch "attendance_tracker_${INPUT_SUFFIX}/Helpers/config.jason"
+touch "attendance_tracker_${INPUT_SUFFIX}/Helpers/config.json"
 touch "attendance_tracker_${INPUT_SUFFIX}/Helpers/assets.csv"
 touch "attendance_tracker_${INPUT_SUFFIX}/reports/reports.log"
 echo "directory structure created"
