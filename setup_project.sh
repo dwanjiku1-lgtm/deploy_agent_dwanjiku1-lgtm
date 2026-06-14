@@ -1,5 +1,6 @@
 #!/bin/bash
 # Process Management (Trap)
+
 cleanup_on_interrupt() {
 	echo -e "\n\n[!] process stoped by user (SIGINT / Ctrl+C)."
 	# look for target folder if it exist or not before executing backup
@@ -24,6 +25,7 @@ cleanup_on_interrupt() {
  trap 'cleanup_on_interrupt' SIGINT
 
 # Directory Architecture
+
 echo "Students attendance tracker"
 # promt the student to enter his name.
 read -p "Enter your name" INPUT_SUFFIX
@@ -41,3 +43,22 @@ touch "attendance_tracker_${INPUT_SUFFIX}/Helpers/config.jason"
 touch "attendance_tracker_${INPUT_SUFFIX}/Helpers/assets.csv"
 touch "attendance_tracker_${INPUT_SUFFIX}/reports/reports.log"
 echo "directory structure created"
+
+# Automated file injection
+
+CONFIG_PATH="attendance_tracker_${INPUT_SUFFIX}/Helpers/config.json"
+echo "[*] setting up default configuration"
+# JSON structure with correct indentation
+cat << 'EOF' > "$CONFIG_PATH"
+{
+    "thresholds": {
+        "warning": 75,
+        "failure": 50
+    },
+    "run_mode": "live",
+    "total_sessions": 15
+}
+EOF
+
+
+
