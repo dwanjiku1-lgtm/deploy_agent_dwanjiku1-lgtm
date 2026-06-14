@@ -105,10 +105,15 @@ fi
 if [ -f "$CONFIG_PATH" ]; then
 	# confirmation of vital configuration parameter if they exist
 	if grep -q '"thresholds"' "$CONFIG_PATH" && grep -q '"run_mode"' "$CONFIG_PATH"; then
+
 		echo "config.json is set  and verified"
 	else
 		echo "config.json file  exist but the content is corrupt"
 		HEALTH_STATUS="FAILED"
+	fi
+else
+	echo "[-] Integrity Check FAILED: config.json file was not generated."
+	HEALTH_STATUS="FAILED"
 fi
 
 # final deployment verdict evaluation
