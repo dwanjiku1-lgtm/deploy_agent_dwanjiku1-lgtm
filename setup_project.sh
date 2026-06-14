@@ -1,5 +1,7 @@
 #!/bin/bash
+# =======================================================================================
 # Process Management (Trap)
+# =========================================================================================
 
 cleanup_on_interrupt() {
 	echo -e "\n\n[!] process stoped by user (SIGINT / Ctrl+C)."
@@ -107,7 +109,7 @@ if [ -f "$CONFIG_PATH" ]; then
 	else
 		echo "config.json file  exist but the content is corrupt"
 		HEALTH_STATUS="FAILED"
-	fi
+fi
 
 # final deployment verdict evaluation
 echo "----------------------------------------"
@@ -118,4 +120,7 @@ else
 	echo "=== SYSTEM HEALTH STATUS: [ CRITICAL FAILURE ] ==="
 	echo "[-] Environment build failed. please evaluate the script errors."
 	exit 1
-fi	
+fi
+
+
+
