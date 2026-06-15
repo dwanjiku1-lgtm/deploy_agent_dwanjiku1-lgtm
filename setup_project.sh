@@ -127,5 +127,13 @@ else
 	exit 1
 fi
 
-
+#environment validation
+# Check if python3 is installed on the system
+if python3 --version &>/dev/null; then
+    PY_VERSION=$(python3 --version 2>&1)
+    echo "[+] Python3 is installed: $PY_VERSION"
+else
+    echo "[!] Warning: python3 was not found on this system."
+    echo "    Install it before running attendance_checker.py"
+fi
 
