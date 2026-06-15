@@ -8,19 +8,19 @@
 ## How to Run the Script
 
 **Step 1 — Open Git Bash and navigate to your project folder:**
-```bash
+
 cd ~/deploy_agent_dwanjiku1-lgtm
-```
+
 
 **Step 2 — Make the script executable (only needed once):**
-```bash
+
 chmod +x setup_project.sh
-```
+
 
 **Step 3 — Run it:**
-```bash
+
 ./setup_project.sh
-```
+
 
 **Step 4 — Follow the prompts on screen:**
 - Type your name when asked
@@ -35,7 +35,7 @@ chmod +x setup_project.sh
 
 ### Part 1 — Safety Net (The Trap)
 
-```bash
+
 cleanup_on_interrupt() {
     echo -e "\n\n[!] process stopped by user (SIGINT / Ctrl+C)."
     if [ -d "attendance_tracker_${INPUT_SUFFIX}" ]; then
@@ -50,7 +50,7 @@ cleanup_on_interrupt() {
 }
 
 trap 'cleanup_on_interrupt' SIGINT
-```
+
 
 **What this code does**
 
@@ -77,7 +77,7 @@ trap 'cleanup_on_interrupt' SIGINT
 
 ### Part 2 — Directory Architecture
 
-```bash
+
 echo "Students attendance tracker"
 read -p "Enter your name" INPUT_SUFFIX
 
@@ -95,7 +95,7 @@ touch "attendance_tracker_${INPUT_SUFFIX}/Helpers/assets.csv"
 touch "attendance_tracker_${INPUT_SUFFIX}/reports/reports.log"
 
 echo "directory structure created"
-```
+
 
 **What this code does**
 
@@ -110,7 +110,7 @@ echo "directory structure created"
 - `touch` — creates empty files in the right locations, ready to be filled with content later
 
 The result is this folder structure:
-```
+
 attendance_tracker_yourname/
 ├── attendance_checker.py
 ├── Helpers/
@@ -118,7 +118,7 @@ attendance_tracker_yourname/
 │   └── assets.csv
 └── reports/
     └── reports.log
-```
+
 
 ---
 
@@ -127,18 +127,18 @@ attendance_tracker_yourname/
 # This section writes the actual content into each file. Think of it like a robot that types everything into the right files for you so you never have to do it manually.
 
 The technique used is called a **heredoc** — it works like this:
-```bash
+
 cat << 'EOF' > "destination_file"
 everything written here goes into the file
 EOF
-```
+
 Everything between the two `EOF` markers gets written directly into the file. Simple as that.
 
 ---
 
 **3a — Writing config.json**
 
-```bash
+
 CONFIG_PATH="attendance_tracker_${INPUT_SUFFIX}/Helpers/config.json"
 echo "[*] setting up default configuration"
 
@@ -152,7 +152,7 @@ cat << 'EOF' > "$CONFIG_PATH"
     "total_sessions": 15
 }
 EOF
-```
+
 
 - `CONFIG_PATH=` — saves the full file path into a variable so we do not have to type it out every time
 - The JSON content sets the default rules:
@@ -165,7 +165,7 @@ EOF
 
 **3b — Writing assets.csv**
 
-```bash
+
 ASSETS_PATH="attendance_tracker_${INPUT_SUFFIX}/Helpers/assets.csv"
 echo "injecting assets.csv into Helpers/"
 
@@ -176,7 +176,7 @@ bob@example.com,Bob Smith,7,8
 charlie@example.com,Charlie Davis,4,11
 diana@example.com,Diana Prince,15,0
 EOF
-```
+
 
 # This writes a CSV file containing four sample students with their email addresses and how many classes they attended and missed. The Python app reads this file to calculate each student's attendance percentage.
 
@@ -184,7 +184,7 @@ EOF
 
 **3c — Writing attendance_checker.py**
 
-```bash
+
 SCRIPT_PATH="attendance_tracker_${INPUT_SUFFIX}/attendance_checker.py"
 echo "injecting attendance checker into attendance_checker.py"
 
@@ -193,7 +193,7 @@ import csv
 import json
 ...
 EOF
-```
+
 
 # This writes the entire Python application directly into the file. The Python script does the following when you run it:
 
@@ -209,7 +209,7 @@ EOF
 
 **3d — Writing reports.log**
 
-```bash
+
 LOG_PATH="attendance_tracker_${INPUT_SUFFIX}/reports/reports.log"
 echo "injecting reports.log into reports/"
 
@@ -217,7 +217,7 @@ cat << 'EOF' > "$LOG_PATH"
 --- Attendance Report Run: 2026-02-06 18:10:01 ---
 [2026-02-06 18:10:01] ALERT SENT TO bob@example.com: URGENT: Bob Smith...
 EOF
-```
+
 
 # This writes a sample report into reports.log so the file is not empty when the project is first created. When you actually run the Python app later it will overwrite this with a fresh real report.
 
@@ -225,7 +225,7 @@ EOF
 
 ### Part 4 — Adjusting Attendance Settings
 
-```bash
+
 read -p "Do you want to update the default attendance? (y/N): " UPDATE_CHOICE
 
 if [[ "$UPDATE_CHOICE" =~ ^[Yy]$ ]]; then
@@ -243,7 +243,7 @@ if [[ "$UPDATE_CHOICE" =~ ^[Yy]$ ]]; then
 
     echo "[+] configuration values updated successfully!"
 fi
-```
+
 
 **What this code does**
 
@@ -261,7 +261,7 @@ fi
 
 ### Part 5 — Health Check
 
-```bash
+
 HEALTH_STATUS="PASSED"
 
 if [ -d "attendance_tracker_${INPUT_SUFFIX}/Helpers" ] && [ -d "attendance_tracker_${INPUT_SUFFIX}/reports" ]; then
@@ -282,7 +282,7 @@ else
     echo "[-] Integrity Check FAILED: config.json file was not generated."
     HEALTH_STATUS="FAILED"
 fi
-```
+
 
 **What this code does**
 
@@ -303,7 +303,7 @@ fi
 
 ### Part 6 — Python3 Environment Validation
 
-```bash
+
 if python3 --version &>/dev/null; then
     PY_VERSION=$(python3 --version 2>&1)
     echo "[+] Python3 is installed: $PY_VERSION"
@@ -311,7 +311,7 @@ else
     echo "[!] Warning: python3 was not found on this system."
     echo "    Install it before running attendance_checker.py"
 fi
-```
+
 
 **What this code does**
 
