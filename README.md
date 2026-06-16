@@ -1,26 +1,26 @@
 # Student Attendance Tracker — Project Factory
 ### By David Wanjiku (dwanjiku1-lgtm)
 
-# A shell script that automatically builds a complete Student Attendance Tracker workspace on your computer. It creates all the folders, writes all the files, lets you customize your settings, and even cleans up safely if something goes wrong.
+A shell script that automatically builds a complete Student Attendance Tracker workspace on your computer. It creates all the folders, writes all the files, lets you customize your settings, and even cleans up safely if something goes wrong.
 
 ---
 
 ## How to Run the Script
 
 **Step 1 — Open Git Bash and navigate to your project folder:**
-
+```bash
 cd ~/deploy_agent_dwanjiku1-lgtm
-
+```
 
 **Step 2 — Make the script executable (only needed once):**
-
+```bash
 chmod +x setup_project.sh
-
+```
 
 **Step 3 — Run it:**
-
+```bash
 ./setup_project.sh
-
+```
 
 **Step 4 — Follow the prompts on screen:**
 - Type your name when asked
@@ -35,7 +35,7 @@ chmod +x setup_project.sh
 
 ### Part 1 — Safety Net (The Trap)
 
-
+```bash
 cleanup_on_interrupt() {
     echo -e "\n\n[!] process stopped by user (SIGINT / Ctrl+C)."
     if [ -d "attendance_tracker_${INPUT_SUFFIX}" ]; then
@@ -50,13 +50,13 @@ cleanup_on_interrupt() {
 }
 
 trap 'cleanup_on_interrupt' SIGINT
-
+```
 
 **What this code does**
 
-# Before the script starts doing any real work, it sets up a safety net. Think of it like a security guard standing at the door of your script watching for any sign of trouble.
+Before the script starts doing any real work, it sets up a safety net. Think of it like a security guard standing at the door of your script watching for any sign of trouble.
 
-# If you press Ctrl+C at any point while the script is running, the guard catches it and does the following automatically:
+If you press Ctrl+C at any point while the script is running, the guard catches it and does the following automatically:
 
 1. Checks if a project folder was already created on disk
 2. If yes — bundles everything inside it into one compressed backup file
@@ -77,7 +77,7 @@ trap 'cleanup_on_interrupt' SIGINT
 
 ### Part 2 — Directory Architecture
 
-
+```bash
 echo "Students attendance tracker"
 read -p "Enter your name" INPUT_SUFFIX
 
@@ -95,11 +95,11 @@ touch "attendance_tracker_${INPUT_SUFFIX}/Helpers/assets.csv"
 touch "attendance_tracker_${INPUT_SUFFIX}/reports/reports.log"
 
 echo "directory structure created"
-
+```
 
 **What this code does**
 
-# This section asks the user for a name and uses it to build the entire project folder structure automatically. Think of it like a construction crew that builds the house frame before anything else goes inside.
+This section asks the user for a name and uses it to build the entire project folder structure automatically. Think of it like a construction crew that builds the house frame before anything else goes inside.
 
 **Breaking down each command:**
 
@@ -110,7 +110,7 @@ echo "directory structure created"
 - `touch` — creates empty files in the right locations, ready to be filled with content later
 
 The result is this folder structure:
-
+```
 attendance_tracker_yourname/
 ├── attendance_checker.py
 ├── Helpers/
@@ -118,27 +118,27 @@ attendance_tracker_yourname/
 │   └── assets.csv
 └── reports/
     └── reports.log
-
+```
 
 ---
 
 ### Part 3 — Writing All the Files Automatically
 
-# This section writes the actual content into each file. Think of it like a robot that types everything into the right files for you so you never have to do it manually.
+This section writes the actual content into each file. Think of it like a robot that types everything into the right files for you so you never have to do it manually.
 
 The technique used is called a **heredoc** — it works like this:
-
+```bash
 cat << 'EOF' > "destination_file"
 everything written here goes into the file
 EOF
-
+```
 Everything between the two `EOF` markers gets written directly into the file. Simple as that.
 
 ---
 
 **3a — Writing config.json**
 
-
+```bash
 CONFIG_PATH="attendance_tracker_${INPUT_SUFFIX}/Helpers/config.json"
 echo "[*] setting up default configuration"
 
@@ -152,7 +152,7 @@ cat << 'EOF' > "$CONFIG_PATH"
     "total_sessions": 15
 }
 EOF
-
+```
 
 - `CONFIG_PATH=` — saves the full file path into a variable so we do not have to type it out every time
 - The JSON content sets the default rules:
@@ -165,7 +165,7 @@ EOF
 
 **3b — Writing assets.csv**
 
-
+```bash
 ASSETS_PATH="attendance_tracker_${INPUT_SUFFIX}/Helpers/assets.csv"
 echo "injecting assets.csv into Helpers/"
 
@@ -176,15 +176,15 @@ bob@example.com,Bob Smith,7,8
 charlie@example.com,Charlie Davis,4,11
 diana@example.com,Diana Prince,15,0
 EOF
+```
 
-
-# This writes a CSV file containing four sample students with their email addresses and how many classes they attended and missed. The Python app reads this file to calculate each student's attendance percentage.
+This writes a CSV file containing four sample students with their email addresses and how many classes they attended and missed. The Python app reads this file to calculate each student's attendance percentage.
 
 ---
 
 **3c — Writing attendance_checker.py**
 
-
+```bash
 SCRIPT_PATH="attendance_tracker_${INPUT_SUFFIX}/attendance_checker.py"
 echo "injecting attendance checker into attendance_checker.py"
 
@@ -193,9 +193,9 @@ import csv
 import json
 ...
 EOF
+```
 
-
-# This writes the entire Python application directly into the file. The Python script does the following when you run it:
+This writes the entire Python application directly into the file. The Python script does the following when you run it:
 
 1. Opens config.json and reads the threshold percentages
 2. Archives the old reports.log if one already exists
@@ -209,7 +209,7 @@ EOF
 
 **3d — Writing reports.log**
 
-
+```bash
 LOG_PATH="attendance_tracker_${INPUT_SUFFIX}/reports/reports.log"
 echo "injecting reports.log into reports/"
 
@@ -217,15 +217,15 @@ cat << 'EOF' > "$LOG_PATH"
 --- Attendance Report Run: 2026-02-06 18:10:01 ---
 [2026-02-06 18:10:01] ALERT SENT TO bob@example.com: URGENT: Bob Smith...
 EOF
+```
 
-
-# This writes a sample report into reports.log so the file is not empty when the project is first created. When you actually run the Python app later it will overwrite this with a fresh real report.
+This writes a sample report into reports.log so the file is not empty when the project is first created. When you actually run the Python app later it will overwrite this with a fresh real report.
 
 ---
 
 ### Part 4 — Adjusting Attendance Settings
 
-
+```bash
 read -p "Do you want to update the default attendance? (y/N): " UPDATE_CHOICE
 
 if [[ "$UPDATE_CHOICE" =~ ^[Yy]$ ]]; then
@@ -243,11 +243,11 @@ if [[ "$UPDATE_CHOICE" =~ ^[Yy]$ ]]; then
 
     echo "[+] configuration values updated successfully!"
 fi
-
+```
 
 **What this code does**
 
-# This section gives you a chance to change the default pass and fail percentages before the app runs. Think of it like a settings screen where you customize things to match your school's rules.
+This section gives you a chance to change the default pass and fail percentages before the app runs. Think of it like a settings screen where you customize things to match your school's rules.
 
 **Breaking down each command:**
 
@@ -261,7 +261,7 @@ fi
 
 ### Part 5 — Health Check
 
-
+```bash
 HEALTH_STATUS="PASSED"
 
 if [ -d "attendance_tracker_${INPUT_SUFFIX}/Helpers" ] && [ -d "attendance_tracker_${INPUT_SUFFIX}/reports" ]; then
@@ -282,11 +282,11 @@ else
     echo "[-] Integrity Check FAILED: config.json file was not generated."
     HEALTH_STATUS="FAILED"
 fi
-
+```
 
 **What this code does**
 
-# This section is like a final inspection before handing over the keys. It checks that everything was built correctly and nothing is missing. It runs two separate checks:
+This section is like a final inspection before handing over the keys. It checks that everything was built correctly and nothing is missing. It runs two separate checks:
 
 **Check 1 — Folder Structure:**
 - `-d` — checks if a directory exists on disk
@@ -303,7 +303,7 @@ fi
 
 ### Part 6 — Python3 Environment Validation
 
-
+```bash
 if python3 --version &>/dev/null; then
     PY_VERSION=$(python3 --version 2>&1)
     echo "[+] Python3 is installed: $PY_VERSION"
@@ -311,11 +311,11 @@ else
     echo "[!] Warning: python3 was not found on this system."
     echo "    Install it before running attendance_checker.py"
 fi
-
+```
 
 **What this code does**
 
-# This checks if Python3 is installed on your computer because without it the attendance_checker.py file cannot run.
+This checks if Python3 is installed on your computer because without it the attendance_checker.py file cannot run.
 
 - `python3 --version &>/dev/null` — quietly runs the python3 version command. If python3 exists it returns true, if not it returns false. The `&>/dev/null` makes sure nothing prints to the terminal at this stage
 - `PY_VERSION=$(python3 --version 2>&1)` — if python3 is found this captures the version text like `Python 3.11.2` and saves it into a variable
@@ -339,7 +339,7 @@ fi
 
 **What this code does**
 
-# This is the final verdict. After all the checks are done the script looks at the HEALTH_STATUS variable like checking a scoreboard:
+This is the final verdict. After all the checks are done the script looks at the HEALTH_STATUS variable like checking a scoreboard:
 
 - If it still says PASSED — everything went perfectly, print a success message and finish
 - If it says FAILED — something went wrong somewhere, print an error message and exit with code 1 which tells the system the script did not complete successfully
@@ -348,7 +348,7 @@ fi
 
 ## How to Trigger the Archive Feature (Testing the Trap)
 
-# The archive feature fires automatically when you press Ctrl+C during the script.
+The archive feature fires automatically when you press Ctrl+C during the script.
 
 **Step 1 — Run the script:**
 ```bash
@@ -387,22 +387,6 @@ tar -tzf attendance_tracker_david_archive.tar.gz
 **Step 6 — Extract and recover everything:**
 ```bash
 tar -xzf attendance_tracker_david_archive.tar.gz
-```
-
----
-
-## Running the Python App After Setup
-
-# Once the script finishes successfully navigate into your project folder and run the Python app:
-
-```bash
-cd attendance_tracker_yourname
-python3 attendance_checker.py
-```
-
-Then check the report that was generated:
-```bash
-cat reports/reports.log
 ```
 
 ---
